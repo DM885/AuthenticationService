@@ -63,7 +63,7 @@ if(process.env.mysqlDb)
 }
 
 /**
- * Runs a SQL query on the DB.
+ * Runs a SQL query on the DB. 
  * @param string stmt
  * @param ?string[] WHERE
  * @returns results[]|false
