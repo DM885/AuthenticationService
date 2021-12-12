@@ -15,7 +15,7 @@ env:
   GKE_CLUSTER: buildcluster
   GKE_ZONE: europe-north1
   NAMESPACE: rabbits                                              # Maybe change this, probably not though.
-  DEPLOYMENT_NAME: AuthenticationService                                           # Change this to match the name in the deployment.yaml
+  DEPLOYMENT_NAME: authenticationservice                                           # Change this to match the name in the deployment.yaml
 
 jobs:
   build:
@@ -77,7 +77,6 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: 16.x
-        cache: 'npm'        
     - name: Run Setup-Script
       run: |
         chmod +x .github/k3s-setup.sh

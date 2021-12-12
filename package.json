@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cross-env RAPID=1 node src/index.js",
-    "startCompose": "cross-env RAPID=1 mysqlDb=dm885 mysqlPass=test mysqlUser=user nodemon src/index.js"
+    "debugDocker": "cross-env RAPID=1 mysqlHost=localhost mysqlPass=password mysqlDb=dm885 mysqlUser=root nodemon src/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,9 +23,12 @@
     "@ovcina/rapidriver": "^2.0.7",
     "bcrypt": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
+    "cross-env": "^7.0.3",
     "mysql": "^2.18.1"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "jest": "^27.3.1",
+    "cypress": "^9.1.0",
+    "nodemon": "^2.0.14"
   }
 }
