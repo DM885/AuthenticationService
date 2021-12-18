@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import rapidriver from "@ovcina/rapidriver";
-import query, {host, getTokenData, SECRET, subscriber} from "./helpers.js";
+import helpers from './helpers.js';
 
 const REFRESH_SECRET = process.env.refreshSecret ?? `$[/AJLN;A~djDLh,/kDg?K$Y=*dY44B4)TV*u*X5jjug9#.k>3QLzN;C9K2J36_:`;  // JWT refresh secret
 
@@ -13,11 +13,11 @@ const REFRESH_SECRET = process.env.refreshSecret ?? `$[/AJLN;A~djDLh,/kDg?K$Y=*d
 export async function generateAccessToken(refreshToken)
 {
     let ret = false;
-    const token = await getTokenData(refreshToken, REFRESH_SECRET);
+    const token = await helpers.getTokenData(refreshToken, REFRESH_SECRET);
     if(token)
     {
 
-        const userStmt = await query("SELECT * FROM `users` WHERE `id` = ?", [
+        const userStmt = await helpers.query("SELECT * FROM `users` WHERE `id` = ?", [
             token.uid
         ]);
         if(userStmt.length > 0)
@@ -28,7 +28,7 @@ export async function generateAccessToken(refreshToken)
                 uid: userData.id,
                 rank: userData.rank,
                 solverLimit: userData.solverLimit,
-            }, SECRET, {
+            }, helpers.SECRET, {
                 expiresIn: 60 * 15, // 15 minutes
                 issuer: "",
             });
@@ -53,7 +53,7 @@ export async function login(username, password)
     };
     if(username && password)
     {
-        const userStmt = await query("SELECT `id`, `rank`, `password` FROM `users` WHERE `email` = ?", [username.toLowerCase()]);
+        const userStmt = await helpers.query("SELECT `id`, `rank`, `password` FROM `users` WHERE `email` = ?", [username.toLowerCase()]);
         if(userStmt && userStmt.length > 0)
         {
             const userData = userStmt[0];
@@ -85,11 +85,11 @@ export async function signUp(username, password, rank)
     let error = true;
     if(username && password)
     {
-        const userStmt = await query("SELECT `email` FROM `users` WHERE `email` = ?", [username.toLowerCase()]);
+        const userStmt = await helpers.query("SELECT `email` FROM `users` WHERE `email` = ?", [username.toLowerCase()]);
         if(userStmt && userStmt.length === 0)
         {
             const hashedPass = await bcrypt.hash(password, 10);
-            const newUserStmt = await query("INSERT INTO users (`email`, `password`, `rank`) VALUES (?, ?, ?)", [
+            const newUserStmt = await helpers.query("INSERT INTO users (`email`, `password`, `rank`) VALUES (?, ?, ?)", [
                 username.toLowerCase(),
                 hashedPass,
                 rank
@@ -111,7 +111,7 @@ setImmediate(() => {
 
 if(process.env.RAPID)
 {
-    subscriber(host, [
+    helpers.subscriber(helpers.host, [
         {
             river: "auth",
             event: "signIn",
